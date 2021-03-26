@@ -8,7 +8,7 @@ System for creating, managing and completing tests with free access.
 -   Ability to view and solve other user's tests
 -   Various categories
 -   Ability to filter by category and search by title
--   Keeping statistics for each user and each test
+-   Keeping statistic for each user and test
 -   Interactive test editor
 -   Fluid UX
 
@@ -21,10 +21,10 @@ System for creating, managing and completing tests with free access.
 ## Views (Pages)
 
 -   **Landing Page**
--   **Login/Registration** - registration with email, username and password.
+-   **Login/Register** - registration with email, username and password.
 -   **Quiz Browser** - list of tests and option to search by title and filter by category.
 -   **Quiz Details** - additional description, test statistics, information about the author and option to start the test.
--   **Quiz Contest Mode** - answering questions, each question have separate view, option to skip questions and opportunity to restart the test.
+-   **Quiz Contest Mode** - answering questions, each question have separate view, option to skip questions, opportunity to restart the test.
 -   **Quiz Results** - summary of the results, option to review the wrong answers.
 -   **Profile Page** - information for created and completed tests.
 -   **Quiz Editor** - integrated editor for tests, questions and answers.
@@ -34,8 +34,6 @@ System for creating, managing and completing tests with free access.
 ### Data structure
 
 #### Collections:
-
-(private values are excluded)
 
 -   Sessions
 -   Users
@@ -74,13 +72,13 @@ System for creating, managing and completing tests with free access.
 ```javascript
 {
     quiz: Pointer<Quiz>,
-    correct: Number
+    correctIndex: Number
 }
 ```
 
 #### Access control
 
--   Guests can register, see the catalog, see test's details and user profile pages.
+-   Guests can register, view the catalog, test's details and user profile pages.
 -   Registered users can complete tests, view their results, create and edit tests.
 -   Only the creator of a test can edit and delete it.
 -   Each registered user can solve other user's tests.
