@@ -1,24 +1,24 @@
+import createList from './list.js';
 import { html } from '../../lib.js';
-import createQuestion from './question.js';
 
-const template = (questions) => html`
+const template = (quiz) => html`
     <section id="editor">
         <header class="pad-large">
-            <h1>New quiz</h1>
+            <h1>${quiz ? 'Edit Quiz' : 'New Quiz'}</h1>
         </header>
 
         <div class="pad-large alt-page">
             <form>
                 <label class="editor-label layout">
-                    <span class="label-col">Title:</span>
-                    <input class="input i-med" type="text" name="title" />
+                    <span class="label-col">Quiz Title:</span>
+                    <input class="input i-med" type="text" name="title" .value=${quiz ? quiz.title : ''} />
                 </label>
 
                 <label class="editor-label layout">
-                    <span class="label-col">Topic:</span>
-                    <select class="input i-med" name="topic">
-                        <option value="all">All Categories</option>
-                        <option value="it">Languages</option>
+                    <span class="label-col">Category:</span>
+                    <select class="input i-med" name="category" .value=${quiz ? quiz.category : '0'}>
+                        <option value="0"><span class="quiz-meta">--Select Category</span></option>
+                        <option value="languages">Languages</option>
                         <option value="hardware">Hardware</option>
                         <option value="software">Tools and Software</option>
                     </select>
@@ -27,27 +27,8 @@ const template = (questions) => html`
             </form>
         </div>
 
-        <header class="pad-large">
-            <h2>Questions</h2>
-        </header>
-
-        ${questionList(questions)}
+        ${quiz ? createList(quiz.questions) : null}
     </section>
-`;
-
-const questionList = (questions) => html`
-    <div class="pad-large alt-page">
-        ${questions.map((q, i) => createQuestion(q, (i += 1)))}
-
-        <article class="editor-question">
-            <div class="editor-input">
-                <button class="input submit action">
-                    <i class="fas fa-plus-circle"></i>
-                    Add question
-                </button>
-            </div>
-        </article>
-    </div>
 `;
 
 const questions = [
@@ -69,5 +50,17 @@ const questions = [
 ];
 
 export default async function editorPage(ctx) {
-    ctx.render(template(questions));
+    let quiz = null;
+    const quizId = ctx.params.id;
+
+    if (quizId) {
+        quiz = {
+            title: 'Test Quiz',
+            category: 'languages',
+            questions: [],
+        };
+    }
+
+    ctx.render(template(quiz));
 }
+  

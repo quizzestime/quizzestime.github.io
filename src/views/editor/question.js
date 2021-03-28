@@ -5,9 +5,9 @@ const viewTemplate = (question, index, onEdit, onDelete) => html`
     <div class="layout">
         <div class="question-control">
             <button @click=${onEdit} class="input submit action"><i class="fas fa-edit"></i> Edit</button>
-            <button @click=${onDelete} class="input submit action"><i class="fas fa-trash-alt"></i> Delete</button>
+            <button @click=${() => onDelete(index)} class="input submit action"><i class="fas fa-trash-alt"></i> Delete</button>
         </div>
-        <h3>Question ${index}</h3>
+        <h3>Question ${index + 1}</h3>
     </div>
     <div>
         <p class="editor-input">${question.text}</p>
@@ -32,55 +32,67 @@ const editorTemplate = (question, index, onSave, onCancel) => html`
             <button @click=${onSave} class="input submit action"><i class="fas fa-check-double"></i> Save</button>
             <button @click=${onCancel} class="input submit action"><i class="fas fa-times"></i> Cancel</button>
         </div>
-        <h3>Question ${index}</h3>
+        <h3>Question ${index + 1}</h3>
     </div>
 
     <form>
         <textarea class="input editor-input editor-text" name="text" placeholder="Enter question" .value=${question.text}></textarea>
 
-        ${createAnswerList(question.answers, index, question.correctIndex)}
+        ${createAnswerList(question, index)}
     </form>
 `;
 
 // loading -> <div class="loading-overlay working"></div>
 
-export default function createQuestion(question, index, editMode = false) {
+export default function createQuestion(question, removeQuestion) {
+    let index = 0;
+    let editorActive = false;
+    let currentQuestion = copyQuestion(question);
     const element = document.createElement('article');
     element.classList.add('editor-question');
 
-    if (editMode) {
-        showEditor();
-    } else {
-        showView();
-    }
-
-    return element;
+    showView();
+    return update;
 
     async function onEdit() {
+        editorActive = true;
         showEditor();
+    }
+
+    function onCancel() {
+        editorActive = false;
+        currentQuestion = copyQuestion(question);
+
+        showView();
     }
 
     async function onSave() {
         const formData = new FormData(element.querySelector('form'));
         const data = [...formData.entries()].reduce((a, [k, v]) => Object.assign(a, { [k]: v }), {});
+        console.log(data);
+
+        editorActive = false;
     }
 
-    function onCancel() {
-        showView();
-    }
+    function update(newIndex) {
+        index = newIndex;
+        editorActive ? showEditor() : showView();
 
-    async function onDelete() {
-        const confirmed = confirm('Are you sure you want to delete this question?'); // replace with modal later on
-        if (confirmed) {
-            element.remove();
-        }
+        return element;
     }
 
     function showView() {
-        render(viewTemplate(question, index, onEdit, onDelete), element);
+        render(viewTemplate(currentQuestion, index, onEdit, removeQuestion), element);
     }
 
     function showEditor() {
-        render(editorTemplate(question, index, onSave, onCancel), element);
+        render(editorTemplate(currentQuestion, index, onSave, onCancel), element);
     }
+}
+
+function copyQuestion(question) {
+    const currentQuestion = Object.assign({}, question);
+    currentQuestion.answers = currentQuestion.answers.slice();
+
+    return currentQuestion;
 }
