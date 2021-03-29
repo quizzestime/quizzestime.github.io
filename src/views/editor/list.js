@@ -1,5 +1,6 @@
 import createQuestion from './question.js';
 import { html, render } from '../../lib.js';
+import { deleteQuestion } from '../../api/data.js';
 
 const questionList = (questions, addQuestion) => html`
     <header class="pad-large">
@@ -18,8 +19,8 @@ const questionList = (questions, addQuestion) => html`
     </article>
 `;
 
-export default function createList(questions) {
-    const currentQuestions = questions.map((q) => createQuestion(q, removeQuestion));
+export default function createList(quizId, questions, updateCount) {
+    const currentQuestions = questions.map((q) => createQuestion(quizId, q, removeQuestion));
     const element = document.createElement('div');
     element.classList.add('pad-large', 'alt-page');
 
@@ -27,14 +28,23 @@ export default function createList(questions) {
     return element;
 
     function addQuestion() {
+        questions.push({
+            text: '',
+            answers: [],
+            correctIndex: 0,
+        });
+
         currentQuestions.push(
             createQuestion(
+                quizId,
                 {
                     text: '',
                     answers: [],
                     correctIndex: 0,
                 },
-                removeQuestion
+                removeQuestion,
+                updateCount,
+                true
             )
         );
         update();
@@ -50,10 +60,16 @@ export default function createList(questions) {
         );
     }
 
-    function removeQuestion(index) {
+    async function removeQuestion(index, id) {
         const confirmed = confirm('Are you sure you want to delete this question?'); // replace with modal later on
         if (confirmed) {
+            if (id) {
+                await deleteQuestion(id);
+                updateCount(-1);
+            }
+
             currentQuestions.splice(index, 1);
+            questions.splice(index, 1);
             update();
         }
     }

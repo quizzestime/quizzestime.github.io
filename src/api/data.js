@@ -45,11 +45,11 @@ export async function createQuestion(quizId, question) {
 }
 
 export async function deleteQuestion(quizId) {
-    return await api.del(host + '/collection/Question/' + quizId);
+    return await api.del(host + '/classes/Question/' + quizId);
 }
 
 export async function updateQuestion(questionId, question) {
-    return await api.put(host + '/collection/Question/' + questionId, question);
+    return await api.put(host + '/classes/Question/' + questionId, question);
 }
 
 export async function getQuestionsByQuizId(quizId) {

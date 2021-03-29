@@ -1,5 +1,7 @@
 import createAnswerList from './answer.js';
 import { html, render } from '../../lib.js';
+import { createOverlay } from '../common/loader.js';
+import { createQuestion as apiCreateQuestion, updateQuestion } from '../../api/data.js';
 
 const viewTemplate = (question, index, onEdit, onDelete) => html`
     <div class="layout">
@@ -42,11 +44,9 @@ const editorTemplate = (question, index, onSave, onCancel) => html`
     </form>
 `;
 
-// loading -> <div class="loading-overlay working"></div>
-
-export default function createQuestion(question, removeQuestion) {
+export default function createQuestion(quizId, question, removeQuestion, updateCount, edit) {
     let index = 0;
-    let editorActive = false;
+    let editorActive = edit || false;
     let currentQuestion = copyQuestion(question);
     const element = document.createElement('article');
     element.classList.add('editor-question');
@@ -62,14 +62,50 @@ export default function createQuestion(question, removeQuestion) {
     function onCancel() {
         editorActive = false;
         currentQuestion = copyQuestion(question);
-
         showView();
     }
 
     async function onSave() {
         const formData = new FormData(element.querySelector('form'));
-        const data = [...formData.entries()].reduce((a, [k, v]) => Object.assign(a, { [k]: v }), {});
-        console.log(data);
+        const data = [...formData.entries()];
+        const answers = data
+            .filter(([k, v]) => k.includes('answer-'))
+            .reduce((a, [k, v]) => {
+                const index = Number(k.split('-').pop());
+                a[index] = v;
+                return a;
+            }, []);
+
+        const body = {
+            answers,
+            text: formData.get('text'),
+            correctIndex: Number(data.find(([k, v]) => k.includes('question-')).pop()),
+        };
+
+        const loader = createOverlay();
+
+        try {
+            element.appendChild(loader);
+
+            if (question.objectId) {
+                // update
+                await updateQuestion(question.objectId, body);
+            } else {
+                //create
+                const response = await apiCreateQuestion(quizId, body);
+                updateCount();
+                question.objectId = response.objectId;
+            }
+
+            Object.assign(question, body);
+            currentQuestion = copyQuestion(question);
+            editorActive = false;
+            update(index);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            loader.remove();
+        }
 
         editorActive = false;
     }
@@ -82,7 +118,13 @@ export default function createQuestion(question, removeQuestion) {
     }
 
     function showView() {
-        render(viewTemplate(currentQuestion, index, onEdit, removeQuestion), element);
+        const onDelete = async (index) => {
+            const loader = createOverlay();
+            element.appendChild(loader);
+            await removeQuestion(index, question.objectId);
+        };
+
+        render(viewTemplate(currentQuestion, index, onEdit, onDelete), element);
     }
 
     function showEditor() {
