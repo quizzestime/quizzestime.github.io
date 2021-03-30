@@ -1,6 +1,6 @@
 import createAnswerList from './answer.js';
 import { html, render } from '../../lib.js';
-import { createOverlay } from '../common/loader.js';
+import { createOverlayLoader } from '../common/loader.js';
 import { createQuestion as apiCreateQuestion, updateQuestion } from '../../api/data.js';
 
 const viewTemplate = (question, index, onEdit, onDelete) => html`
@@ -82,7 +82,7 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
             correctIndex: Number(data.find(([k, v]) => k.includes('question-')).pop()),
         };
 
-        const loader = createOverlay();
+        const loader = createOverlayLoader();
 
         try {
             element.appendChild(loader);
@@ -91,7 +91,7 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
                 // update
                 await updateQuestion(question.objectId, body);
             } else {
-                //create
+                // create
                 const response = await apiCreateQuestion(quizId, body);
                 updateCount();
                 question.objectId = response.objectId;
@@ -119,7 +119,7 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
 
     function showView() {
         const onDelete = async (index) => {
-            const loader = createOverlay();
+            const loader = createOverlayLoader();
             element.appendChild(loader);
             await removeQuestion(index, question.objectId);
         };

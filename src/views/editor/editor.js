@@ -1,5 +1,6 @@
 import createList from './list.js';
-import { html, render } from '../../lib.js';
+import { overlayLoader } from '../common/loader.js';
+import { categories, html, render } from '../../lib.js';
 import { createQuiz, updateQuiz, getQuizzes, getQuestionsByQuizId } from '../../api/data.js';
 
 const template = (quiz, quizEditor, updateCount) => html`
@@ -23,9 +24,7 @@ const quizEditor = (onSave, quiz, loading) => html`
             <span class="label-col">Category:</span>
             <select class="input i-med" name="category" .value=${quiz ? quiz.category : '0'} ?disabled=${loading}>
                 <option value="0"><span class="quiz-meta">-- Select Category</span></option>
-                <option value="languages">Languages</option>
-                <option value="hardware">Hardware</option>
-                <option value="software">Tools and Software</option>
+                ${Object.entries(categories).map(([k, v]) => html`<option value=${k} ?selected=${quiz.category === k}>${v}</option>`)}
             </select>
         </label>
 
@@ -37,7 +36,7 @@ const quizEditor = (onSave, quiz, loading) => html`
         <input class="input submit action" type="submit" value="Save" />
     </form>
 
-    ${loading ? html`<div class="loading-overlay working"></div>` : null}
+    ${loading ? overlayLoader : null}
 `;
 
 function createQuizEditor(onSave, quiz) {
@@ -57,8 +56,12 @@ function createQuizEditor(onSave, quiz) {
 
 export default async function editorPage(ctx) {
     const quizId = ctx.params.id;
-    const [quiz, questions] = quizId ? await Promise.all([getQuizzes(quizId), getQuestionsByQuizId(quizId)]) : [null, []];
-    quiz.questions = questions;
+    const ownerId = JSON.parse(sessionStorage.getItem('auth')).userId || null;
+    const [quiz, questions] = quizId ? await Promise.all([getQuizzes(quizId), getQuestionsByQuizId(quizId, ownerId)]) : [null, []];
+
+    if (quizId) {
+        quiz.questions = questions; //.filter((q) => q.owner.objectId === ownerId);
+    }
 
     const { editor, updateEditor } = createQuizEditor(onSave, quiz);
     ctx.render(template(quiz, editor, updateCount));
@@ -73,6 +76,8 @@ export default async function editorPage(ctx) {
         const formData = new FormData(e.target);
         const [title, category, description] = [formData.get('title'), formData.get('category'), formData.get('description')];
         const data = { title, category, description, questionCount: questions.length };
+
+        // form validation to be implemented here
 
         try {
             updateEditor(true);

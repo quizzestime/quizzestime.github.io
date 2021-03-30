@@ -20,9 +20,9 @@ export async function post(url, data) {
 }
 
 export async function logout() {
-    const result = await post(settings.host + '/logout', {});
+    const response = await post(settings.host + '/logout', {});
     sessionStorage.removeItem('auth');
-    return result;
+    return response;
 }
 
 export async function login(username, password) {
@@ -32,10 +32,10 @@ export async function login(username, password) {
 }
 
 export async function register(email, username, password) {
-    const result = await post(settings.host + '/users', { email, password, username });
-    const { objectId, sessionToken } = result;
+    const response = await post(settings.host + '/users', { email, password, username });
+    const { objectId, sessionToken } = response;
     sessionStorage.setItem('auth', JSON.stringify({ email, userId: objectId, username, sessionToken }));
-    return result;
+    return response;
 }
 
 function getOptions(method = 'get', body) {
@@ -77,7 +77,8 @@ async function request(url, options) {
         } catch (err) {
             return response;
         }
-    } catch (err) {  // HANDLE ERROR WITH THIS SERVER!
+    } catch (err) {
+        // HANDLE ERROR WITH THIS SERVER!
         // if (err.message === "Login or password don't match") {
         //     throw err;
         // }
