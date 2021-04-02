@@ -6,6 +6,8 @@ export const createOverlayLoader = () => {
     return element;
 };
 
+export const overlayLoader = html`<div class="loading-overlay working"></div>`;
+
 export const createCubeLoader = () => html`
     <div class="pad-large alt-page async">
         <div class="sk-cube-grid">
@@ -21,5 +23,3 @@ export const createCubeLoader = () => html`
         </div>
     </div>
 `;
-
-export const overlayLoader = html`<div class="loading-overlay working"></div>`;
