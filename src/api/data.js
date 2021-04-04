@@ -9,52 +9,71 @@ export const register = api.register;
 
 // Implement application specific requests
 function createPointer(name, id) {
-    return { __type: 'Pointer', className: name, objectId: id };
+	return { __type: 'Pointer', className: name, objectId: id };
 }
 
 function addOwner(object) {
-    const userId = JSON.parse(sessionStorage.getItem('auth')).userId;
-    const result = Object.assign({}, object);
-    result.owner = createPointer('_User', userId);
-    return result;
+	const userId = JSON.parse(sessionStorage.getItem('auth')).userId;
+	const result = Object.assign({}, object);
+	result.owner = createPointer('_User', userId);
+	return result;
 }
 
 // Quiz collection
 export async function deleteQuiz(quizId) {
-    return await api.del(host + '/classes/Quiz/' + quizId);
+	return await api.del(host + '/classes/Quiz/' + quizId);
 }
 
 export async function createQuiz(quiz) {
-    const body = addOwner(quiz);
-    return await api.post(host + '/classes/Quiz', body);
+	const body = addOwner(quiz);
+	return await api.post(host + '/classes/Quiz', body);
 }
 
 export async function updateQuiz(quizId, quiz) {
-    return await api.put(host + '/classes/Quiz/' + quizId, quiz);
+	return await api.put(host + '/classes/Quiz/' + quizId, quiz);
 }
 
 export async function getQuizzes(quizId) {
-    return await api.get(host + '/classes/Quiz' + (quizId ? '/'.concat(quizId + '?include=owner') : ''))
+	return await api.get(host + '/classes/Quiz' + (quizId ? '/'.concat(quizId + '?include=owner') : ''));
 }
 
 // Question collection
 export async function createQuestion(quizId, question) {
-    const body = addOwner(question);
-    body.quiz = createPointer('Quiz', quizId);
-    return await api.post(host + '/classes/Question', body);
+	const body = addOwner(question);
+	body.quiz = createPointer('Quiz', quizId);
+	return await api.post(host + '/classes/Question', body);
 }
 
 export async function deleteQuestion(quizId) {
-    return await api.del(host + '/classes/Question/' + quizId);
+	return await api.del(host + '/classes/Question/' + quizId);
 }
 
 export async function updateQuestion(questionId, question) {
-    return await api.put(host + '/classes/Question/' + questionId, question);
+	return await api.put(host + '/classes/Question/' + questionId, question);
 }
 
 export async function getQuestionsByQuizId(quizId, ownerId) {
-    // filter questions so only the questions created by the quiz owner will be returned
-    const query = JSON.stringify({ quiz: createPointer('Quiz', quizId), owner: createPointer('_User', ownerId) });
-    const response = await api.get(host + '/classes/Question?where=' + encodeURIComponent(query));
-    return response.results;
+	// filter questions so only the questions created by the quiz owner will be returned
+	const query = JSON.stringify({ quiz: createPointer('Quiz', quizId), owner: createPointer('_User', ownerId) });
+	const response = await api.get(host + '/classes/Question?where=' + encodeURIComponent(query));
+	return response.results;
+}
+
+// Solution collection
+export async function getSolutionsByUserId(userId) {
+	const query = JSON.stringify({ owner: createPointer('_Users', userId) });
+	const response = await api.get(host + '/classes/Solution?where=' + encodeURIComponent(query));
+	return response.results;
+}
+
+export async function getSolutionsByQuizId(quizId) {
+	const query = JSON.stringify({ owner: createPointer('Quiz', quizId) });
+	const response = await api.get(host + '/classes/Solution?where=' + encodeURIComponent(query));
+	return response.results;
+}
+
+export async function submitSolution(quizId, solution) {
+	const body = addOwner(solution);
+	body.quiz = createPointer('Quiz', quizId);
+	return await api.post(host + '/classes/Solution', body);
 }
