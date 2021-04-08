@@ -13,6 +13,32 @@
 		/>
 		<link rel="stylesheet" href="/styles/site.css" />
 
+		<!-- Start Single Page Apps for GitHub Pages -->
+		<script type="text/javascript">
+			// Single Page Apps for GitHub Pages
+			// MIT License
+			// This script checks to see if a redirect is present in the query string,
+			// converts it back into the correct url and adds it to the
+			// browser's history using window.history.replaceState(...),
+			// which won't cause the browser to attempt to load the new url.
+			// When the single page app is loaded further down in this file,
+			// the correct url will be waiting in the browser's history for
+			// the single page app to route accordingly.
+			(function (l) {
+				if (l.search[1] === '/') {
+					var decoded = l.search
+						.slice(1)
+						.split('&')
+						.map(function (s) {
+							return s.replace(/~and~/g, '&');
+						})
+						.join('?');
+					window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+				}
+			})(window.location);
+		</script>
+		<!-- End Single Page Apps for GitHub Pages -->
+
 		<script src="/src/app.js" type="module"></script>
 	</head>
 
@@ -27,7 +53,8 @@
 						<a class="nav-link" href="/browse">Browse</a>
 						<div id="user-nav">
 							<a class="nav-link" href="/create">Create</a>
-							<a class="nav-link profile-link" href="#"><i class="fas fa-user-circle"></i></a>
+                            <!-- -> # / javascript:void(0) -->
+							<a class="nav-link profile-link" href="#"><i class="fas fa-user-circle"></i></a> 
 							<a id="logoutBtn" class="nav-link" href="javascript:void(0)">Logout</a>
 						</div>
 						<div id="guest-nav">
@@ -637,7 +664,6 @@
     
                 </section> -->
 			</div>
-            
 		</div>
 	</body>
 </html>

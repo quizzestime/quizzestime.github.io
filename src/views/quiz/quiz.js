@@ -1,5 +1,5 @@
+import { cubeLoader } from '../common/loader.js';
 import { submitSolution } from '../../api/data.js';
-import { createCubeLoader } from '../common/loader.js';
 import { html, classMap, styleMap } from '../../lib.js';
 
 const quizTemplate = (quiz, questions, answers, currentIndex, onSelect, onSubmit, resetQuiz) => html`
@@ -50,7 +50,11 @@ const quizTemplate = (quiz, questions, answers, currentIndex, onSelect, onSubmit
 `;
 
 const indexTemplate = (quizId, i, isCurrent, isAnswered) => {
-	const className = { 'q-index': true, 'q-current': isCurrent, 'q-answered': isAnswered };
+	const className = {
+		'q-index': true,
+		'q-current': isCurrent,
+		'q-answered': isAnswered,
+	};
 	return html`<a class=${classMap(className)} href="/quiz/${quizId}?question=${i + 1}"></a>`;
 };
 
@@ -100,7 +104,7 @@ export default async function quizPage(ctx) {
 			}
 		}
 
-		ctx.render(createCubeLoader());
+		ctx.render(cubeLoader());
 		await submitSolution(ctx.quiz.objectId, result);
 		ctx.page.redirect('/summary/' + ctx.quiz.objectId);
 	}
