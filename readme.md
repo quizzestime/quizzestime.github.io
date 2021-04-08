@@ -78,7 +78,7 @@ System for creating, managing and completing tests with free access.
 
 #### Access control
 
--   Guests can register, view the catalog, test's details and user profile pages.
--   Registered users can complete tests, view their results, create and edit tests.
--   Only the creator of a test can edit and delete it.
--   Each registered user can solve other user's tests.
+-   Guests can register, view the quiz catalog, quiz's details and users profiles.
+-   Registered users can complete quizzes, view their results, create and edit quizzes.
+-   Only the creator of a quiz can edit and delete it.
+-   Each registered user can solve other user's quizzes.
