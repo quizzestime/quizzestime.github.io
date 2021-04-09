@@ -13,7 +13,7 @@ const quizTemplate = (quiz, questions, answers, currentIndex, onSelect, onSubmit
 		</header>
 		<div class="pad-large alt-page">
 			<article class="question">
-				<p class="q-text">${questions[currentIndex].text}</p>
+				<p class="q-text questions-text">${questions[currentIndex].text}</p>
 
 				<form @change=${onSelect} id="quiz-form">
 					<div>${questions.map((q, i) => questionTemplate(q, i, i === currentIndex))}</div>

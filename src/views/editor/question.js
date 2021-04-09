@@ -14,7 +14,7 @@ const viewTemplate = (question, index, onEdit, onDelete) => html`
 		<h3>Question ${index + 1}</h3>
 	</div>
 	<div>
-		<p class="editor-input">${question.text}</p>
+		<p class="editor-input questions-text">${question.text}</p>
 
 		${question.answers.map((a, i) => radioView(a, question.correctIndex === i))}
 	</div>

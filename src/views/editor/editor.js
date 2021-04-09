@@ -26,7 +26,7 @@ const quizEditorTemplate = (onSave, quiz, loading) => html`
 			<select class="input i-med" name="category" .value=${quiz ? quiz.category : '0'} ?disabled=${loading}>
 				<option value="0"><span class="quiz-meta">-- Select Category</span></option>
 				${Object.entries(categories).map(
-					([k, v]) => html`<option value=${k} ?selected=${quiz.category === k}>${v}</option>`
+					([k, v]) => html`<option value=${k} ?selected=${ quiz && quiz.category === k}>${v}</option>`
 				)}
 			</select>
 		</label>
@@ -68,7 +68,7 @@ export default async function editorPage(ctx) {
 	const [quiz, questions] = quizId
 		? await Promise.all([getQuizById(quizId), getQuestionsByQuizId(quizId, ownerId)])
 		: [null, []];
-		
+
 	if (quizId) {
 		quiz.questions = questions;
 	}
