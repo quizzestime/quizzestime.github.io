@@ -1,9 +1,9 @@
 import { categories } from '../../util.js';
 import { html, until } from '../../lib.js';
 import { lineLoader } from '../common/loader.js';
-import { getSolutionCount } from '../../api/data.js';
+import { getSolutionsCount } from '../../api/data.js';
 
-const detailsTemplate = (quiz) => html` <section id="details">
+const detailsTemplate = (quiz, isGuest) => html` <section id="details">
 	<div class="pad-large alt-page">
 		<article class="details">
 			<h1>${quiz.title}</h1>
@@ -15,14 +15,16 @@ const detailsTemplate = (quiz) => html` <section id="details">
 			<p class="quiz-desc">${quiz.description}</p>
 
 			<div>
-				<a class="cta action" href="/quiz/${quiz.objectId}">Begin Quiz</a>
+				${isGuest
+					? html`<a class="cta action" href="/quiz/${quiz.objectId}">Begin Quiz</a>`
+					: html`<a class="cta action" href="/login">Sign up to begin the quiz</a>`}
 			</div>
 		</article>
 	</div>
 </section>`;
 
 async function loadCount(quiz) {
-	const taken = (await getSolutionCount([quiz.objectId]))[quiz.objectId] || 0;
+	const taken = (await getSolutionsCount([quiz.objectId]))[quiz.objectId] || 0;
 
 	return html` <div class="quiz-meta">
 		<span>${quiz.questionCount} question${quiz.questionCount == 1 ? '' : 's'}</span>
@@ -32,5 +34,6 @@ async function loadCount(quiz) {
 }
 
 export default async function detailsPage(ctx) {
-	ctx.render(detailsTemplate(ctx.quiz));
+	const isGuest = sessionStorage.getItem('auth');
+	ctx.render(detailsTemplate(ctx.quiz, isGuest));
 }

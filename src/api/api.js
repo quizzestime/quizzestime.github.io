@@ -1,5 +1,5 @@
-// import { setUserNav } from '../app.js';
-// import page from '../../node_modules/page/page.mjs';
+import { page } from '../lib.js';
+import setUserNav from '../app.js';
 import { setUserData, clearUserData, getUserData } from '../util.js';
 
 export const settings = { host: '', appId: '', apiKey: '' };
@@ -27,14 +27,14 @@ export async function logout() {
 }
 
 export async function login(username, password) {
-	const result = await post(settings.host + '/login', { username, password });
-	setUserData({ userId: result.objectId, username, sessionToken: result.sessionToken });
-	return result;
+	const response = await post(settings.host + '/login', { username, password });
+	setUserData({ username, email: response.email, userId: response.objectId, sessionToken: response.sessionToken });
+	return response;
 }
 
 export async function register(email, username, password) {
 	const response = await post(settings.host + '/users', { email, password, username });
-	setUserData({ username, userId: response.objectId, sessionToken: response.sessionToken });
+	setUserData({ username, email, userId: response.objectId, sessionToken: response.sessionToken });
 	return response;
 }
 
@@ -66,37 +66,19 @@ async function request(url, options) {
 
 		if (response.ok === false) {
 			const err = await response.json();
-			throw new Error(err.message);
+			throw new Error(err.error);
 		}
 
-		try {
-			// logout return empty body and the server still returns content type as 'application/json'
-			// so I can't check if content type is present therefor that's the way I'm handling it with
-			// a extra try catch block
-			return await response.json();
-		} catch (err) {
-			return response;
-		}
+		return await response.json();
 	} catch (err) {
-		// HANDLE ERROR WITH THIS SERVER!
-		// if (err.message === "Login or password don't match") {
-		//     throw err;
-		// }
+		alert(err.message);
 
-		// if (err.message === 'A user with the same email already exists') {
-		//     throw err;
-		// }
+		if (err.message === 'Invalid session token') {
+			page.redirect('/');
+			clearUserData();
+			setUserNav();
+		}
 
-		// if (err.message === 'Invalid access token') {
-		//     sessionStorage.removeItem('auth');
-
-		//     alert(err.message + '!');
-		//     setUserNav();
-		//     page.redirect('/');
-		//     throw err;
-		// }
-
-		alert(err);
 		throw err;
 	}
 }

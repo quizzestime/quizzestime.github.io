@@ -38,19 +38,26 @@ export async function updateQuiz(id, quiz) {
 
 export async function getQuizzes() {
 	const quizzes = (await api.get(host + '/classes/Quiz')).results;
-	const taken = await getSolutionCount(quizzes.map((q) => q.objectId));
+	const taken = await getSolutionsCount(quizzes.map((q) => q.objectId));
 	quizzes.forEach((q) => (q.taken = taken[q.objectId]));
 	return quizzes;
 }
 
-export async function getQuizById(id) {
+export async function getQuizByQuizId(id) {
 	return await api.get(host + '/classes/Quiz/' + id + '?include=owner');
+}
+
+export async function getQuizzesByUserId(userId) {
+	const query = JSON.stringify({ owner: createPointer('_User', userId) });
+	const response = await api.get(host + '/classes/Quiz?where=' + encodeURIComponent(query));
+	return response.results;
+	
 }
 
 export async function getMostRecent() {
 	const quiz = (await api.get(host + '/classes/Quiz?order=-createdAt&limit=1')).results[0];
 	if (quiz) {
-		const taken = await getSolutionCount([quiz.objectId]);
+		const taken = await getSolutionsCount([quiz.objectId]);
 		quiz.taken = taken[quiz.objectId];
 	}
 	return quiz;
@@ -86,7 +93,7 @@ export async function getQuestionsByQuizId(quizId, ownerId) {
 
 // Solution collection
 export async function getSolutionsByUserId(userId) {
-	const query = JSON.stringify({ owner: createPointer('_Users', userId) });
+	const query = JSON.stringify({ owner: createPointer('_User', userId) });
 	const response = await api.get(host + '/classes/Solution?where=' + encodeURIComponent(query));
 	return response.results;
 }
@@ -103,7 +110,7 @@ export async function submitSolution(quizId, solution) {
 	return await api.post(host + '/classes/Solution', body);
 }
 
-export async function getSolutionCount(quizIds) {
+export async function getSolutionsCount(quizIds) {
 	const query = JSON.stringify({ $or: quizIds.map((id) => ({ quiz: createPointer('Quiz', id) })) });
 	const solutions = (await api.get(host + '/classes/Solution?where=' + encodeURIComponent(query))).results;
 	const result = solutions.reduce((a, c) => {

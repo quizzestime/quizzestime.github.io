@@ -1,5 +1,4 @@
 const categories = {
-	js: 'JavaScript',
 	software: 'Software',
 	hardware: 'Hardware',
 	frameworks: 'Frameworks',
