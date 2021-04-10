@@ -35,7 +35,7 @@ export async function loginPage(ctx) {
         const password = formData.get('password').trim();
 
         if (username === '' || password === '') {
-            return alert('All fields are required!') // to do better handling later
+            return alert('All fields are required!'); // to do better handling later
         }
 
         await login(username, password);
@@ -79,7 +79,7 @@ export async function registerPage(ctx) {
         const rePass = formData.get('rePass').trim();
 
         if ([email, username, password].map(Boolean).includes(false)) {
-            return alert('All fields are required!')
+            return alert('All fields are required!');
         }
 
         if (password !== rePass) {
@@ -87,7 +87,7 @@ export async function registerPage(ctx) {
         }
 
         await register(email, username, password);
-        
+
         ctx.setUserNav();
         ctx.page.redirect('/browse');
     }

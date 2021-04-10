@@ -2,7 +2,6 @@ import createQuestion from './question.js';
 import { html, render } from '../../lib.js';
 import { deleteQuestion } from '../../api/data.js';
 
-
 // If not owner - don't show 'add question' button
 const questionList = (questions, addQuestion) => html`
     <header class="pad-large">

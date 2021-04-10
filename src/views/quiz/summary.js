@@ -1,23 +1,23 @@
 import { html } from '../../lib.js';
 
 const template = (quiz, result) => html`
-	<section id="summary">
-		<div class="hero layout">
-			<article class="details glass">
-				<h1>Quiz Results</h1>
-				<h2>${quiz.title}</h2>
+    <section id="summary">
+        <div class="hero layout">
+            <article class="details glass">
+                <h1>Quiz Results</h1>
+                <h2>${quiz.title}</h2>
 
-				<div class="summary summary-top">${result.percent}%</div>
+                <div class="summary summary-top">${result.percent}%</div>
 
-				<div class="summary">${result.correct}/${result.total} correct answers</div>
+                <div class="summary">${result.correct}/${result.total} correct answers</div>
 
-				<a class="action cta" href="#"><i class="fas fa-sync-alt"></i> Retake Quiz</a>
-				<a class="action cta" href="#"><i class="fas fa-clipboard-list"></i> See Details</a>
-			</article>
-		</div>
+                <a class="action cta" href="#"><i class="fas fa-sync-alt"></i> Retake Quiz</a>
+                <a class="action cta" href="#"><i class="fas fa-clipboard-list"></i> See Details</a>
+            </article>
+        </div>
 
-		${
-			'' /*
+        ${
+            '' /*
     <div class="pad-large alt-page">
         <article class="preview">
             <span class="s-correct">
@@ -85,19 +85,19 @@ const template = (quiz, result) => html`
         </article>
     </div>
     */
-		}
-	</section>
+        }
+    </section>
 `;
 
 export default async function summaryPage(ctx) {
-	const answers = ctx.quiz.answers;
-	const questions = ctx.quiz.questions;
-	const correct = answers.reduce((a, c, i) => (a += Number(questions[i].correctIndex === c)), 0);
-	ctx.render(
-		template(ctx.quiz, {
-			correct,
-			total: questions.length,
-			percent: ((correct / questions.length) * 100).toFixed(2),
-		})
-	);
+    const answers = ctx.quiz.answers;
+    const questions = ctx.quiz.questions;
+    const correct = answers.reduce((a, c, i) => (a += Number(questions[i].correctIndex === c)), 0);
+    ctx.render(
+        template(ctx.quiz, {
+            correct,
+            total: questions.length,
+            percent: ((correct / questions.length) * 100).toFixed(2),
+        })
+    );
 }
