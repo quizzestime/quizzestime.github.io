@@ -32,7 +32,7 @@ page('/create', decorateContext, editorPage);
 page('/browse', decorateContext, browsePage);
 page('/edit/:id', decorateContext, editorPage);
 page('/register', decorateContext, registerPage);
-page('/users/:username', decorateContext, userPage);
+page('/users/:id', decorateContext, userPage);
 page('/quiz/:id', decorateContext, getQuiz, quizPage);
 page('/details/:id', decorateContext, getQuiz, detailsPage);
 page('/summary/:id', decorateContext, getQuiz, summaryPage);
@@ -40,47 +40,47 @@ page('/summary/:id', decorateContext, getQuiz, summaryPage);
 page.start();
 
 function decorateContext(ctx, next) {
-	ctx.render = (content) => render(content, main);
-	ctx.setUserNav = setUserNav;
-	ctx.auth = getUserData();
-	next();
+    ctx.render = (content) => render(content, main);
+    ctx.setUserNav = setUserNav;
+    ctx.auth = getUserData();
+    next();
 }
 
 async function getQuiz(ctx, next) {
-	ctx.clearState = clearState;
-	const quizId = ctx.params.id;
-	if (state[quizId] == undefined) {
-		ctx.render(cubeLoader());
-		state[quizId] = await getQuizByQuizId(quizId);
-		const ownerId = state[quizId].owner.objectId;
-		state[quizId].questions = await getQuestionsByQuizId(quizId, ownerId);
-		state[quizId].answers = state[quizId].questions.map((q) => undefined);
-	}
-	ctx.quiz = state[quizId];
+    ctx.clearState = clearState;
+    const quizId = ctx.params.id;
+    if (state[quizId] == undefined) {
+        ctx.render(cubeLoader());
+        state[quizId] = await getQuizByQuizId(quizId);
+        const ownerId = state[quizId].owner.objectId;
+        state[quizId].questions = await getQuestionsByQuizId(quizId, ownerId);
+        state[quizId].answers = state[quizId].questions.map((q) => undefined);
+    }
+    ctx.quiz = state[quizId];
 
-	next();
+    next();
 }
 
 function clearState(quizId) {
-	if (quizId) {
-		delete state[quizId];
-	}
+    if (quizId) {
+        delete state[quizId];
+    }
 }
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
-	await logout();
-	setUserNav();
-	page.redirect('/');
+    await logout();
+    setUserNav();
+    page.redirect('/');
 });
 
 export default function setUserNav() {
-	const auth = getUserData();
-	if (auth) {
-		document.getElementById('user-nav').style.display = 'block';
-		document.getElementById('guest-nav').style.display = 'none';
-		document.querySelector('.profile-link').href = `/users/${auth.userId}`;
-	} else {
-		document.getElementById('user-nav').style.display = 'none';
-		document.getElementById('guest-nav').style.display = 'block';
-	}
+    const auth = getUserData();
+    if (auth) {
+        document.getElementById('user-nav').style.display = 'block';
+        document.getElementById('guest-nav').style.display = 'none';
+        document.querySelector('.profile-link').href = `/users/${auth.userId}`;
+    } else {
+        document.getElementById('user-nav').style.display = 'none';
+        document.getElementById('guest-nav').style.display = 'block';
+    }
 }
