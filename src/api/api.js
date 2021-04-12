@@ -71,14 +71,18 @@ async function request(url, options) {
 
         return await response.json();
     } catch (err) {
-        alert(err.message);
-
         if (err.message === 'Invalid session token') {
+            alert("Oops something went wrong, we'll fix it now!");
             page.redirect('/');
             clearUserData();
             setUserNav();
         }
 
+        if (err.message === 'text is required') {
+            alert("Answers can't be empty!");
+        }
+
+        alert(err.message);
         throw err;
     }
 }

@@ -22,6 +22,10 @@ function addOwner(object) {
     return result;
 }
 
+export async function getUserData(id) {
+    return await api.get(host + '/users/' + id);
+}
+
 // Quiz collection
 export async function deleteQuiz(id) {
     return await api.del(host + '/classes/Quiz/' + id);
@@ -38,9 +42,9 @@ export async function updateQuiz(id, quiz) {
 
 export async function getQuizzes() {
     const quizzes = (await api.get(host + '/classes/Quiz')).results; // empty array if none
-    const taken = quizzes.length ? await getSolutionsCount(quizzes.map((q) => q.objectId)) : null;
-
-    return quizzes.length ? quizzes.forEach((q) => (q.taken = taken[q.objectId])) : null;
+    const timesTaken = quizzes.length ? await getSolutionsCount(quizzes.map((q) => q.objectId)) : null;
+    quizzes.forEach((q) => (q.taken = timesTaken[q.objectId]));
+    return quizzes.length ? quizzes : null;
 }
 
 export async function getQuizByQuizId(id) {
@@ -111,8 +115,17 @@ export async function submitSolution(quizId, solution) {
 
 export async function getSolutionsCount(quizIds) {
     const query = JSON.stringify({ $or: quizIds.map((id) => ({ quiz: createPointer('Quiz', id) })) });
-    const solutions = (await api.get(host + '/classes/Solution?where=' + encodeURIComponent(query))).results;
-    const result = solutions.reduce((a, c) => {
+    const solutions = (await api.get(host + '/classes/Solution?where=' + encodeURIComponent(query))).results; // empty array if none
+
+    if (solutions.length === 0) {
+        return quizIds.reduce((a, c) => {
+            if (!a[c]) {
+                a[c] = 0;
+            }
+            return a;
+        }, {});
+    }
+    return solutions.reduce((a, c) => {
         const id = c.quiz.objectId;
         if (!a[id]) {
             a[id] = 0;
@@ -120,6 +133,4 @@ export async function getSolutionsCount(quizIds) {
         a[id]++;
         return a;
     }, {});
-
-    return result;
 }

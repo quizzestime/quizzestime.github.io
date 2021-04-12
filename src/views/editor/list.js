@@ -48,6 +48,7 @@ export default function createList(quizId, questions, updateCount) {
                 true
             )
         );
+
         update();
     }
 
@@ -62,7 +63,7 @@ export default function createList(quizId, questions, updateCount) {
     }
 
     async function removeQuestion(index, id) {
-        const confirmed = confirm('Are you sure you want to delete this question?'); // replace with modal later on
+        const confirmed = confirm('Are you sure you want to delete this question?');
         if (confirmed) {
             if (id) {
                 await deleteQuestion(id);

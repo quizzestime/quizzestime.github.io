@@ -82,9 +82,11 @@ export default async function editorPage(ctx) {
             categories[formData.get('category').trim()],
         ];
 
-        const data = { title, category, description, questionCount: questions.length };
+        if ([title, description, category].map(Boolean).includes(false)) {
+            return alert('All fields are required!');
+        }
 
-        // form validation to be implemented here
+        const data = { title, category, description, questionCount: questions.length };
 
         try {
             updateEditor(true);
@@ -96,8 +98,7 @@ export default async function editorPage(ctx) {
                 ctx.page.redirect('/edit/' + response.objectId);
             }
         } catch (err) {
-            console.error(err);
-            // alert(err)
+            alert(err);
         } finally {
             updateEditor(false);
         }

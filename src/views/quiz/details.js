@@ -17,14 +17,14 @@ const detailsTemplate = (quiz, isGuest) => html` <section id="details">
             <div>
                 ${isGuest
                     ? html`<a class="cta action" href="/quiz/${quiz.objectId}">Begin Quiz</a>`
-                    : html`<a class="cta action" href="/login">Sign up to begin the quiz</a>`}
+                    : html`<a class="cta action" href="/login">Sign in to begin the quiz</a>`}
             </div>
         </article>
     </div>
 </section>`;
 
 async function loadCount(quiz) {
-    const taken = (await getSolutionsCount([quiz.objectId]))[quiz.objectId] || 0;
+    const taken = (await getSolutionsCount([quiz.objectId]))[quiz.objectId];
 
     return html` <div class="quiz-meta">
         <span>${quiz.questionCount} question${quiz.questionCount == 1 ? '' : 's'}</span>

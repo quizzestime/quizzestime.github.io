@@ -60,9 +60,10 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
     }
 
     function onCancel() {
-        editorActive = false;
-        currentQuestion = copyQuestion(question);
         showView();
+        element.remove();
+        editorActive = false;
+        // currentQuestion = copyQuestion(question);        
     }
 
     function update(newIndex) {
@@ -74,6 +75,7 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
     async function onSave() {
         const formData = new FormData(element.querySelector('form'));
         const data = [...formData.entries()];
+
         const answers = data
             .filter(([k, v]) => k.includes('answer-'))
             .reduce((a, [k, v]) => {
@@ -81,6 +83,14 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
                 a[index] = v;
                 return a;
             }, []);
+
+        if (data.some(([k, v]) => v === '')) {
+            return alert("Questions and answers can't be empty!");
+        }
+
+        if (data.find(([k, v]) => k.includes('question-')) === undefined) {
+            return alert('You need to add answers first!');
+        }
 
         const body = {
             answers,
@@ -108,6 +118,7 @@ export default function createQuestion(quizId, question, removeQuestion, updateC
             editorActive = false;
             update(index);
         } catch (err) {
+            alert(err.message);
             console.error(err);
         } finally {
             loader.remove();

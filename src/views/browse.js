@@ -25,8 +25,9 @@ const template = () => html`
 
 async function loadQuizzes() {
     // implement filter logic!
-    const quizzes = await getQuizzes();
-    return Array.isArray(quizzes)
+    const quizzes = await getQuizzes(); // null if none
+
+    return quizzes
         ? html`<div class="pad-large alt-page">${quizzes.map(quizTemplate)}</div> `
         : html`<h1 class="no-quizzes-available">Currently there no quizzes available!</h1>`;
 }
