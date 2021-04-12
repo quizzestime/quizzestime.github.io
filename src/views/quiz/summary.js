@@ -7,11 +7,10 @@ const template = (quiz, result) => html`
                 <h1>Quiz Results</h1>
                 <h2>${quiz.title}</h2>
 
-                <div class="summary summary-top">${result.percent}%</div>
+                <div class="${result.percent < 50 ? 'summary summary-top failed' : 'summary summary-top'}">${result.percent}%</div>
+                <div class="${result.correct < result.total / 2 ? 'summary failed' : 'summary'}">${result.correct}/${result.total} correct answers</div>
 
-                <div class="summary">${result.correct}/${result.total} correct answers</div>
-
-                <a class="action cta" href="#"><i class="fas fa-sync-alt"></i> Retake Quiz</a>
+                <a class="action cta" href=${'/quiz/' + quiz.objectId}><i class="fas fa-sync-alt"></i> Retake Quiz</a>
                 <a class="action cta" href="#"><i class="fas fa-clipboard-list"></i> See Details</a>
             </article>
         </div>
@@ -97,7 +96,7 @@ export default async function summaryPage(ctx) {
         template(ctx.quiz, {
             correct,
             total: questions.length,
-            percent: ((correct / questions.length) * 100).toFixed(2),
+            percent: (correct / questions.length) * 100,
         })
     );
 }

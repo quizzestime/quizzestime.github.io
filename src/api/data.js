@@ -27,8 +27,9 @@ export async function getUserData(id) {
 }
 
 // Quiz collection
-export async function deleteQuiz(id) {
-    return await api.del(host + '/classes/Quiz/' + id);
+export async function deleteQuiz(id, userId) { // implement deleting of quiz related questions
+  (await Promise.all( await getQuestionsByQuizId(id, userId ))).forEach(q => deleteQuestion(q.objectId))
+  return await api.del(host + '/classes/Quiz/' + id);
 }
 
 export async function createQuiz(quiz) {

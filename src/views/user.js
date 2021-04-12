@@ -86,10 +86,20 @@ export default async function userPage(ctx) {
                                           <td class="cell-2">
                                               <a href=${'/details/' + data.userLastCompleteQuiz.objectId}>${data.userLastCompleteQuiz.title}</a>
                                           </td>
-                                          <td class="cell-3 s-correct">
-                                              ${((data.userLastSolution.correct / data.userLastSolution.total) * 100).toFixed(2)}%
+                                          <td
+                                              class="${(data.userLastSolution.correct / data.userLastSolution.total) * 100 < 50
+                                                  ? 'cell-3 s- failed'
+                                                  : 'cell-3 s-correct'}"
+                                          >
+                                              ${(data.userLastSolution.correct / data.userLastSolution.total) * 100}%
                                           </td>
-                                          <td class="cell-4 s-correct">${data.userLastSolution.correct}/${data.userLastSolution.total} correct answers</td>
+                                          <td
+                                              class="${data.userLastSolution.total / 2 > data.userLastSolution.correct
+                                                  ? 'cell-3 s- failed'
+                                                  : 'cell-3 s-correct'}"
+                                          >
+                                              ${data.userLastSolution.correct}/${data.userLastSolution.total} correct answers
+                                          </td>
                                       </tr>`
                                     : html`
                                           <h4>${isProfileOwner ? 'You' : username} haven't completed any quizzes yet.</h4>
@@ -119,7 +129,7 @@ export default async function userPage(ctx) {
     async function onDelete(id) {
         const confirmed = confirm('Are you sure you want to delete this quiz?');
         if (confirmed) {
-            await deleteQuiz(id);
+            await deleteQuiz(id, user.userId);
             ctx.page.redirect('/users/' + user.userId);
         }
     }

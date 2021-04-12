@@ -57,7 +57,7 @@ const registerTemplate = (onSubmit) => html`
                     <label class="block centered">Username: <input class="auth-input input" type="text" name="username" required /></label>
                     <label class="block centered">Email: <input class="auth-input input" type="text" name="email" required /></label>
                     <label class="block centered">Password: <input class="auth-input input" type="password" name="password" required /></label>
-                    <label class="block centered">Repeat: <input class="auth-input input" type="password" name="rePass" /></label>
+                    <label class="block centered">Repeat Password: <input class="auth-input input" type="password" name="rePass" /></label>
                     <input class="block action cta" type="submit" value="Create Account" />
                 </form>
                 <footer class="tab-footer">Already have an account? <a class="invert" href="/login">Sign in here</a>.</footer>
