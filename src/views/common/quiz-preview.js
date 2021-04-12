@@ -1,5 +1,4 @@
 import { html } from '../../lib.js';
-import { categories } from '../../util.js';
 
 export const quizTemplate = (quiz) => html` <article class="preview layout">
     <div class="right-col">
@@ -8,7 +7,7 @@ export const quizTemplate = (quiz) => html` <article class="preview layout">
     <div class="left-col">
         <h3><a class="quiz-title-link" href=${'/details/' + quiz.objectId}>${quiz.title}</a></h3>
         <br />
-        <span class="quiz-topic">Category: ${categories[quiz.category]}</span>
+        <span class="quiz-topic">Category: ${quiz.category}</span>
         <div class="quiz-meta">
             <span>${quiz.questionCount} question${quiz.questionCount == 1 ? '' : 's'}</span>
             <span>|</span>
