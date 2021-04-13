@@ -35,8 +35,17 @@ System for creating, managing and completing tests with free access.
 
 #### Collections:
 
--   Sessions
 -   Users
+
+```javascript
+{
+    email: String,
+    username: String,
+    password: String
+}
+```
+
+-   Sessions
 
 ```javascript
 {
