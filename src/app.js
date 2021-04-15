@@ -15,27 +15,17 @@ const main = document.getElementById('content');
 const state = {};
 setUserNav();
 
-// page('/', homePage);
-// page('/login', loginPage);
-// page('*', decorateContext);
-// page('/browse', browsePage);
-// page('/create', editorPage);
-// page('/edit/:id', editorPage);
-// page('/register', registerPage);
-// page('/quiz/:id', getQuiz, quizPage);
-// page('/details/:id', getQuiz, detailsPage);
-// page('/summary/:id', getQuiz, summaryPage);
-
-page('/', decorateContext, homePage);
-page('/login', decorateContext, loginPage);
-page('/create', decorateContext, editorPage);
-page('/browse', decorateContext, browsePage);
-page('/edit/:id', decorateContext, editorPage);
-page('/register', decorateContext, registerPage);
-page('/users/:id', decorateContext, userPage);
-page('/quiz/:id', decorateContext, getQuiz, quizPage);
-page('/details/:id', decorateContext, getQuiz, detailsPage);
-page('/summary/:id', decorateContext, getQuiz, summaryPage);
+page('*', decorateContext);
+page('/', homePage);
+page('/login', loginPage);
+page('/browse', browsePage);
+page('/create', editorPage);
+page('/users/:id', userPage);
+page('/edit/:id', editorPage);
+page('/register', registerPage);
+page('/quiz/:id', getQuiz, quizPage);
+page('/details/:id', getQuiz, detailsPage);
+page('/summary/:id', getQuiz, summaryPage);
 
 page.start();
 
