@@ -27,7 +27,7 @@ export default async function browsePage(ctx) {
 }
 
 async function loadQuizzes(searchParams, title, category) {
-    const quizzes = await getQuizzes();
+    const quizzes = (await getQuizzes()).reverse();
 
     if (searchParams) {
         const searchResult = searchQuizzes(title, category, quizzes);

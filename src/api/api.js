@@ -71,15 +71,12 @@ async function request(url, options) {
 
         return await response.json();
     } catch (err) {
-        if (err.message === 'Invalid session token') {
+        if (err.message === 'Invalid session token' || err.message === 'Session token is expired.') {
             alert("Oops something went wrong, we'll fix it now!");
             page.redirect('/');
             clearUserData();
             setUserNav();
-        }
-
-        if (err.message === 'text is required') {
-            alert("Answers can't be empty!");
+            return;
         }
 
         alert(err.message);

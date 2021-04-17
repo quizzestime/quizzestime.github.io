@@ -17,12 +17,10 @@ const loginTemplate = (onSubmit) => html`
                 <footer class="tab-footer">
                     Don't have an account?
                     <a class="invert" href="/register"> Create one here </a>
-                    .
                 </footer>
             </div>
         </div>
     </section>
-    ;
 `;
 
 export async function loginPage(ctx) {
@@ -60,7 +58,7 @@ const registerTemplate = (onSubmit) => html`
                     <label class="block centered">Repeat Password: <input class="auth-input input" type="password" name="rePass" /></label>
                     <input class="block action cta" type="submit" value="Create Account" />
                 </form>
-                <footer class="tab-footer">Already have an account? <a class="invert" href="/login">Sign in here</a>.</footer>
+                <footer class="tab-footer">Already have an account? <a class="invert" href="/login">Sign in here</a></footer>
             </div>
         </div>
     </section>

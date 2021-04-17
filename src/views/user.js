@@ -52,12 +52,12 @@ export default async function userPage(ctx) {
     }
 
     if (quizzesCreatedByUserData.length) {
-        data.quizzesCreatedByUser = quizzesCreatedByUserData;
+        data.quizzesCreatedByUser = quizzesCreatedByUserData.reverse();
         Object.assign(quizTakenTimes, await getSolutionsCount(data.quizzesCreatedByUser.map((q) => q.objectId)));
     }
 
     async function update() {
-        // the function 'update' needs to work with promises in order for loader to be visualized
+        // the function 'update' needs to work with promises in order for the loader to be visualized
         const { username } = await getUserDataAPI(viewedProfileId);
 
         return html`
