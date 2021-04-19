@@ -1,6 +1,6 @@
 # Quiz Time
 
-#### System for creating, managing and completing tests with free access.
+#### System for creating, managing and completing quizzes with free access.
 
 ## Functionality
 
