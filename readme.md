@@ -8,7 +8,7 @@
 -   Ability to view and solve other user's tests
 -   Various categories
 -   Ability to filter by category and search by title
--   Keeping statistic for each user and test
+-   Keeping statistic for each user and each test
 -   Interactive test editor
 -   Fluid UX
 
