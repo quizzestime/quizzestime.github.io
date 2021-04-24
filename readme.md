@@ -2,13 +2,9 @@
 
 #### System for creating, managing and completing quizzes with free access.
 
-<br>
-
 ## WARNING 
 This app might not run because free limits of Back4app or hosting service has been exceeded, if so please submit a issue! <br>
 This is just an open source project and it doesn't have the feature of deleting your account, use example email when registering!
-
-<br>
 
 ## Functionality
 
