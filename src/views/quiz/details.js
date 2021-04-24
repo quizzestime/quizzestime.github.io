@@ -7,10 +7,8 @@ const detailsTemplate = (quiz, isGuest) => html` <section id="details">
     <div class="pad-large alt-page">
         <article class="details">
             <h1>${quiz.title}</h1>
-            <span class="quiz-topic"
-                >A quiz by <a href="/users/${quiz.owner.objectId}">${quiz.owner.username}</a> on the topic of
-                <strong>${categories[quiz.category]}</strong></span
-            >
+            <span class="quiz-topic">A quiz by <a href="/users/${quiz.owner.objectId}">${quiz.owner.username}</a> on the topic of ${quiz.category}</span>
+
             ${until(loadCount(quiz), lineLoader())}
             <p class="quiz-desc">${quiz.description}</p>
 
