@@ -2,13 +2,18 @@
 
 #### System for creating, managing and completing quizzes with free access.
 
+## WARNING 
+
+This app might not run because free limits of Back4app or hosting service has been exceeded, if so please submit a issue! <br>
+This is just an open source project and it doesn't have the feature of deleting your account, use example email when registering!
+
 ## Functionality
 
 -   User registration
 -   Ability to view and solve other user's tests
 -   Various categories
 -   Ability to filter by category and search by title
--   Keeping statistic for each user and test
+-   Keeping statistic for each user and each test
 -   Interactive test editor
 -   Fluid UX
 
